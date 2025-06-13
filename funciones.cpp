@@ -25,8 +25,8 @@ void mostrarMenu() {
             cargarLoteMarcas();
         } else if (opcion == 0) {
             cout << "Saliendo del programa..." << endl;
-            programaActivo = false; // Cambiar la variable para salir del bucle
-            return; // Salir de la función mostrarMenu
+            programaActivo = false; // Cambiamos a false para salir del bucle.
+            return;
         } else {
             cout << "Opcion no implementada aun." << endl;
         }
@@ -101,7 +101,7 @@ void cargarLoteMarcas() {
             nombres[posicionInicial + j] = nombreTemp[j];
             j++;
         }
-        nombres[posicionInicial + j] = '\0';
+        nombres[posicionInicial + j] = '\0'; // \0 es un caracter nulo
         
         cantidadMarcas++;
         
