@@ -3,5 +3,6 @@
 
 void mostrarMenu();
 void cargarLoteMarcas();
+void cargarLoteProductos();
 
 #endif
