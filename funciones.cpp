@@ -272,7 +272,7 @@ void cargarLoteProductos() {
         
         // Guardar los datos del producto
         codigosProductos[cantidadProductos] = codigo;
-        nombresProductos[cantidadProductos] = nombreTemp; // Simplemente asignamos el string
+        nombresProductos[cantidadProductos] = nombreTemp; // aca asignamos el string
         
         preciosVenta[cantidadProductos] = precioVenta;
         preciosCompra[cantidadProductos] = precioCompra;
