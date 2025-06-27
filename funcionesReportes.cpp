@@ -14,6 +14,7 @@ void mostrarMenuReportes(Producto productos[], int cantidadProductos,
         cout << "2. Ventas por marca" << endl;
         cout << "3. Formas de pago mas usadas" << endl;
         cout << "4. Productos mas vendidos" << endl;
+        cout << "5. Promociones especiales" << endl;
         cout << "0. Volver al menu principal" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
@@ -26,6 +27,8 @@ void mostrarMenuReportes(Producto productos[], int cantidadProductos,
             mostrarReporteFormasPagoMasUsadas(ventas, cantidadVentas, formasPago, cantidadFormasPago);
         } else if (opcion == 4) {
             mostrarReporteProductosMasVendidos(productos, cantidadProductos, nombresProductos, ventas, cantidadVentas);
+        } else if (opcion == 5) {
+            mostrarReportePromocionesEspeciales(productos, cantidadProductos, nombresProductos, ventas, cantidadVentas, marcas, cantidadMarcas);
         } else if (opcion == 0) {
             menuActivo = false;
         } else {

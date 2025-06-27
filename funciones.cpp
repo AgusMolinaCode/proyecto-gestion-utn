@@ -22,37 +22,31 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
         cin >> opcion;
 
         if (opcion == 1) {
-            // Solo mostramos información básica ya que no podemos usar string ni matrices de char
+            
             cout << "\n===== CARGA DE LOTE DE MARCAS =====" << endl;
             // Llamamos a la función de carga manual de marcas
-            string nombresMarcas[10]; // Array temporal para nombres (aumentado a 10)
-            int codigosMarcas[10]; // Array básico para códigos de marcas
-            cargarLoteMarcas(codigosMarcas, nombresMarcas, cantidadMarcas);
-            
-            // Copiar los códigos al array de estructuras
-            for (int i = 0; i < cantidadMarcas; i++) {
-                marcas[i].codigo = codigosMarcas[i];
-            }
+            string nombresMarcas[10]; 
+            cargarLoteMarcas(marcas, nombresMarcas, cantidadMarcas);
             
             cout << "\nLote de marcas cargado exitosamente!" << endl;
             cout << "Total de marcas cargadas: " << cantidadMarcas << endl;
             
             cout << "\nPresione Enter para continuar...";
-            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+            cin.ignore(); // Limpiar el buffer
+            cin.get();   
         } else if (opcion == 2) {
             // Verificar si hay marcas cargadas
             if (cantidadMarcas == 0) {
                 cout << "\n===== CARGA DE LOTE DE PRODUCTOS =====" << endl;
                 cout << "Error: No hay marcas cargadas. Debe cargar el lote de marcas primero." << endl;
                 cout << "\nPresione Enter para continuar...";
-                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                cin.ignore(); 
+                cin.get();    
                 return;
             }
             
             // Llamamos a la función de carga manual de productos
-            string nombresMarcas[10]; // Array para esperar nombres de marcas (aumentado a 10)
+            string nombresMarcas[10]; 
             // Usamos el array global para nombres de productos
             float preciosVenta[20];
             float preciosCompra[20];
@@ -72,7 +66,6 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
             
             // Asignar correctamente los valores a la estructura de productos
             for (int i = 0; i < cantidadProductos; i++) {
-                // Los códigos ya están en codigosProductosGlobal desde cargarLoteProductos
                 productos[i].codigo = codigosProductosGlobal[i];
                 productos[i].precioVenta = preciosVenta[i];
                 productos[i].precioCompra = preciosCompra[i];
@@ -84,12 +77,12 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
             cout << "Total de productos cargados: " << cantidadProductos << endl;
             
             cout << "\nPresione Enter para continuar...";
-            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+            cin.ignore(); 
+            cin.get();    
         } else if (opcion == 3) {
             // Llamamos a la función de carga manual de formas de pago
-            string codigosFormasPago[5]; // Array temporal para códigos (aumentado a 5)
-            string nombresFormasPago[5]; // Array temporal para nombres (aumentado a 5)
+            string codigosFormasPago[5]; 
+            string nombresFormasPago[5]; 
             int porcentajesFormasPago[5]; // Aumentado a 5
             
             cargarLoteFormasPago(codigosFormasPago, nombresFormasPago, 
@@ -99,16 +92,16 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
             cout << "Total de formas de pago cargadas: " << cantidadFormasPago << endl;
             
             cout << "\nPresione Enter para continuar...";
-            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+            cin.ignore(); 
+            cin.get();    
         } else if (opcion == 4) {
             // Verificar si hay productos y formas de pago cargadas
             if (cantidadProductos == 0) {
                 cout << "\n===== CARGA DE LOTE DE VENTAS =====" << endl;
                 cout << "Error: No hay productos cargados. Debe cargar el lote de productos primero." << endl;
                 cout << "\nPresione Enter para continuar...";
-                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                cin.ignore(); 
+                cin.get();    
                 continue;
             }
             
@@ -116,8 +109,8 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
                 cout << "\n===== CARGA DE LOTE DE VENTAS =====" << endl;
                 cout << "Error: No hay formas de pago cargadas. Debe cargar el lote de formas de pago primero." << endl;
                 cout << "\nPresione Enter para continuar...";
-                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                cin.ignore(); 
+                cin.get();    
                 continue;
             }
             
@@ -127,9 +120,7 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
             int stockDisponible[20];
             int codigosMarcaProductos[20];
             
-            // Preparar los arrays para la función de ventas
-            // Usamos los arrays globales que ya contienen los nombres y códigos
-            // correctos desde la función cargarLoteProductos
+            
             for (int i = 0; i < cantidadProductos; i++) {
                 // No necesitamos copiar los códigos, ya están en codigosProductosGlobal
                 preciosVenta[i] = productos[i].precioVenta;
@@ -155,8 +146,8 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
                            ventas, cantidadVentas);
             
             cout << "\nPresione Enter para continuar...";
-            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+            cin.ignore(); 
+            cin.get();    
         } else if (opcion == 5) {
             // Mostrar submenú de reportes
             cout << "\n===== REPORTES =====" << endl;
@@ -165,13 +156,13 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
             if (cantidadProductos == 0) {
                 cout << "Error: No hay productos cargados. Debe cargar el lote de productos primero." << endl;
                 cout << "\nPresione Enter para continuar...";
-                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                cin.ignore(); 
+                cin.get();    
             } else if (cantidadVentas == 0) {
                 cout << "Error: No hay ventas registradas. Debe cargar el lote de ventas primero." << endl;
                 cout << "\nPresione Enter para continuar...";
-                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
-                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                cin.ignore(); 
+                cin.get();    
             } else {
                 // Preparar arrays de formas de pago para los reportes
                 FormaPago formasPagoArray[5];
@@ -198,5 +189,3 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
         }
     }
 }
-
-// Las funciones de carga de lotes se han simplificado y se manejan directamente en mostrarMenu()

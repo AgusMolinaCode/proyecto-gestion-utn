@@ -8,13 +8,12 @@ using namespace std;
 // Estructura para marcas
 struct Marca {
     int codigo;
-    // No almacenamos el nombre porque no podemos usar string ni matrices de char
+    int diasEspeciales[5]; // Vector de hasta 5 días (1-30) para promociones especiales
 };
 
 // Estructura para productos
 struct Producto {
     int codigo;
-    // No almacenamos el nombre porque no podemos usar string ni matrices de char
     float precioVenta;
     float precioCompra;
     int stock;
@@ -23,7 +22,6 @@ struct Producto {
 
 // Estructura para formas de pago
 struct FormaPago {
-    // No almacenamos el código ni nombre porque no podemos usar string ni matrices de char
     int porcentaje;
 };
 
@@ -33,6 +31,7 @@ struct Venta {
     int codigoProducto;
     int cantidad;
     int codigoFormaPago;
+    int diaVenta; // Día del mes (1-30) cuando se realizó la venta
 };
 
 // Funciones principales
@@ -43,7 +42,7 @@ void mostrarMenu(Marca marcas[], int& cantidadMarcas,
                  Venta ventas[], int& cantidadVentas);
 
 // Funciones de carga de lotes
-void cargarLoteMarcas(int codigosMarcas[], string nombresMarcas[], int& cantidadMarcas);
+void cargarLoteMarcas(Marca marcas[], string nombresMarcas[], int& cantidadMarcas);
 
 void cargarLoteProductos(int codigosMarcas[], string nombresMarcas[], int cantidadMarcas, 
                        int codigosProductos[], string nombresProductos[], 
@@ -77,5 +76,9 @@ void mostrarReporteFormasPagoMasUsadas(Venta ventas[], int cantidadVentas,
 
 void mostrarReporteProductosMasVendidos(Producto productos[], int cantidadProductos,
                                        string nombresProductos[], Venta ventas[], int cantidadVentas);
+
+void mostrarReportePromocionesEspeciales(Producto productos[], int cantidadProductos,
+                                        string nombresProductos[], Venta ventas[], int cantidadVentas,
+                                        Marca marcas[], int cantidadMarcas);
 
 #endif

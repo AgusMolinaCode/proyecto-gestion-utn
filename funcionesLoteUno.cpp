@@ -9,7 +9,7 @@ struct MarcaTemp {
     string nombre; // Volvemos a usar string simple
 };
 
-void cargarLoteMarcas(int codigosMarcas[], string nombresMarcas[], int& cantidadMarcas) {
+void cargarLoteMarcas(Marca marcas[], string nombresMarcas[], int& cantidadMarcas) {
     cout << "\n===== CARGA DE LOTE DE MARCAS =====" << endl;
     cout << "Se deben cargar 10 marcas en total." << endl;
     
@@ -21,28 +21,26 @@ void cargarLoteMarcas(int codigosMarcas[], string nombresMarcas[], int& cantidad
     for (int i = 0; i < 10; i++) {
         cout << "\nMarca #" << (i + 1) << ":" << endl;
         
-        // Usamos la estructura para almacenar temporalmente los datos
-        MarcaTemp marca;
         bool codigoValido = false;
         
         while (!codigoValido) {
             cout << "Ingrese codigo de marca (1-10): ";
             
             // Verificar si la entrada es un número
-            if (!(cin >> marca.codigo)) {
+            if (!(cin >> marcas[i].codigo)) {
                 cin.clear(); // Limpiar el estado de error
                 cin.ignore(10000, '\n'); // Descartar la entrada inválida
                 cout << "Error: Debe ingresar un número." << endl;
                 continue;
             }
             
-            if (marca.codigo <= 0 || marca.codigo > 10) {
+            if (marcas[i].codigo <= 0 || marcas[i].codigo > 10) {
                 cout << "Error: El codigo debe estar entre 1 y 10." << endl;
-            } else if (codigosUsados[marca.codigo]) {
+            } else if (codigosUsados[marcas[i].codigo]) {
                 cout << "Error: Ya existe una marca con ese codigo." << endl;
             } else {
                 codigoValido = true;
-                codigosUsados[marca.codigo] = true;
+                codigosUsados[marcas[i].codigo] = true;
             }
         }
         
@@ -51,20 +49,38 @@ void cargarLoteMarcas(int codigosMarcas[], string nombresMarcas[], int& cantidad
         
         while (!nombreValido) {
             cout << "Ingrese nombre de la marca: ";
-            getline(cin, marca.nombre);
+            getline(cin, nombresMarcas[i]);
             
             // Verificar si el nombre está vacío
-            if (marca.nombre.empty()) {
+            if (nombresMarcas[i].empty()) {
                 cout << "Error: El nombre no puede estar vacio." << endl;
             } else {
                 nombreValido = true;
             }
         }
         
-        // Transferimos los datos de la estructura a los arreglos
-        // Usamos el índice i en lugar de cantidadMarcas para evitar problemas de acceso a memoria
-        codigosMarcas[i] = marca.codigo;
-        nombresMarcas[i] = marca.nombre;
+        // Preguntar si tiene promociones especiales
+        char tienePromociones;
+        cout << "¿Tiene promociones especiales? (s/n): ";
+        cin >> tienePromociones;
+        
+        // Inicializar días especiales con ceros
+        for (int j = 0; j < 5; j++) {
+            marcas[i].diasEspeciales[j] = 0;
+        }
+        
+        if (tienePromociones == 's' || tienePromociones == 'S') {
+            int cantidadDias;
+            cout << "¿Cuántos días especiales? (1-5): ";
+            cin >> cantidadDias;
+            
+            if (cantidadDias > 0 && cantidadDias <= 5) {
+                cout << "Ingrese los días especiales (1-30) separados por espacios: ";
+                for (int j = 0; j < cantidadDias; j++) {
+                    cin >> marcas[i].diasEspeciales[j];
+                }
+            }
+        }
         
         cantidadMarcas++;
         
@@ -76,11 +92,32 @@ void cargarLoteMarcas(int codigosMarcas[], string nombresMarcas[], int& cantidad
     
     cout << "\nListado de marcas cargadas:" << endl;
     cout << "-------------------------" << endl;
-    cout << "CODIGO | NOMBRE" << endl;
+    cout << "CODIGO | NOMBRE | PROMOCIONES" << endl;
     cout << "-------------------------" << endl;
     
     for (int i = 0; i < cantidadMarcas; i++) {
-        cout << "  " << codigosMarcas[i] << "    | " << nombresMarcas[i];
+        cout << "  " << marcas[i].codigo << "    | " << nombresMarcas[i];
+        
+        // Mostrar días especiales si los tiene
+        bool tienePromociones = false;
+        for (int j = 0; j < 5; j++) {
+            if (marcas[i].diasEspeciales[j] > 0) {
+                tienePromociones = true;
+                break;
+            }
+        }
+        
+        if (tienePromociones) {
+            cout << " | Días: ";
+            for (int j = 0; j < 5; j++) {
+                if (marcas[i].diasEspeciales[j] > 0) {
+                    cout << marcas[i].diasEspeciales[j] << " ";
+                }
+            }
+        } else {
+            cout << " | Sin promociones";
+        }
+        
         cout << endl;
     }
     cout << "-------------------------" << endl;
