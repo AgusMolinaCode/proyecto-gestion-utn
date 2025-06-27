@@ -1,41 +1,194 @@
 #include <iostream>
-#include <string>
 #include "funciones.h"
 using namespace std;
 
-// Variables para el lote de marcas
-int codigosMarcas[10];
-string nombresMarcas[10]; // Array de strings para los nombres de las marcas
-int cantidadMarcas = 0;
-bool programaActivo = true;
-
-// Variables para el lote de productos
-int codigosProductos[20];
-string nombresProductos[20]; // Array de strings para los nombres de productos, lo cambiamos por los de char
-float preciosVenta[20];
-float preciosCompra[20];
-int stockDisponible[20];
-int codigosMarcaProductos[20];
-int cantidadProductos = 0;
-
-void mostrarMenu() {
+void mostrarMenu(Marca marcas[], int& cantidadMarcas, 
+                 Producto productos[], int& cantidadProductos,
+                 string nombresProductosGlobal[], int codigosProductosGlobal[],
+                 FormaPago formasPago[], int& cantidadFormasPago,
+                 Venta ventas[], int& cantidadVentas) {
     int opcion;
+    bool programaActivo = true;
 
     while (programaActivo) {
         cout << "======= MENU PRINCIPAL =======" << endl;
         cout << "1. Cargar lote de marcas" << endl;
         cout << "2. Cargar lote de productos" << endl;
-        cout << "3. Cargar lote de formas de pago (no implementado)" << endl;
-        cout << "4. Cargar lote de ventas (no implementado)" << endl;
-        cout << "5. Mostrar reportes (no implementado)" << endl;
+        cout << "3. Cargar lote de formas de pago" << endl;
+        cout << "4. Cargar lote de ventas" << endl;
+        cout << "5. Mostrar reportes" << endl;
         cout << "0. Salir" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
 
         if (opcion == 1) {
-            cargarLoteMarcas();
+            // Solo mostramos información básica ya que no podemos usar string ni matrices de char
+            cout << "\n===== CARGA DE LOTE DE MARCAS =====" << endl;
+            // Llamamos a la función de carga manual de marcas
+            string nombresMarcas[10]; // Array temporal para nombres (aumentado a 10)
+            int codigosMarcas[10]; // Array básico para códigos de marcas
+            cargarLoteMarcas(codigosMarcas, nombresMarcas, cantidadMarcas);
+            
+            // Copiar los códigos al array de estructuras
+            for (int i = 0; i < cantidadMarcas; i++) {
+                marcas[i].codigo = codigosMarcas[i];
+            }
+            
+            cout << "\nLote de marcas cargado exitosamente!" << endl;
+            cout << "Total de marcas cargadas: " << cantidadMarcas << endl;
+            
+            cout << "\nPresione Enter para continuar...";
+            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+            cin.get();    // Esperar que el usuario presione Enter antes de continuar
         } else if (opcion == 2) {
-            cargarLoteProductos();
+            // Verificar si hay marcas cargadas
+            if (cantidadMarcas == 0) {
+                cout << "\n===== CARGA DE LOTE DE PRODUCTOS =====" << endl;
+                cout << "Error: No hay marcas cargadas. Debe cargar el lote de marcas primero." << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                return;
+            }
+            
+            // Llamamos a la función de carga manual de productos
+            string nombresMarcas[10]; // Array para esperar nombres de marcas (aumentado a 10)
+            // Usamos el array global para nombres de productos
+            float preciosVenta[20];
+            float preciosCompra[20];
+            int stockDisponible[20];
+            int codigosMarcaProductos[20];
+            
+            // Preparar los arrays para la función
+            int codigosMarcas[10]; // Aumentado a 10 para todas las marcas
+            for (int i = 0; i < cantidadMarcas; i++) {
+                codigosMarcas[i] = marcas[i].codigo;
+            }
+            
+            cargarLoteProductos(codigosMarcas, nombresMarcas, cantidadMarcas,
+                              codigosProductosGlobal, nombresProductosGlobal,
+                              preciosVenta, preciosCompra, stockDisponible,
+                              codigosMarcaProductos, cantidadProductos);
+            
+            // Asignar correctamente los valores a la estructura de productos
+            for (int i = 0; i < cantidadProductos; i++) {
+                // Los códigos ya están en codigosProductosGlobal desde cargarLoteProductos
+                productos[i].codigo = codigosProductosGlobal[i];
+                productos[i].precioVenta = preciosVenta[i];
+                productos[i].precioCompra = preciosCompra[i];
+                productos[i].stock = stockDisponible[i];
+                productos[i].codigoMarca = codigosMarcaProductos[i];
+            }
+            
+            cout << "\nLote de productos cargado exitosamente!" << endl;
+            cout << "Total de productos cargados: " << cantidadProductos << endl;
+            
+            cout << "\nPresione Enter para continuar...";
+            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+        } else if (opcion == 3) {
+            // Llamamos a la función de carga manual de formas de pago
+            string codigosFormasPago[5]; // Array temporal para códigos (aumentado a 5)
+            string nombresFormasPago[5]; // Array temporal para nombres (aumentado a 5)
+            int porcentajesFormasPago[5]; // Aumentado a 5
+            
+            cargarLoteFormasPago(codigosFormasPago, nombresFormasPago, 
+                                porcentajesFormasPago, cantidadFormasPago);
+            
+            cout << "\nLote de formas de pago cargado exitosamente!" << endl;
+            cout << "Total de formas de pago cargadas: " << cantidadFormasPago << endl;
+            
+            cout << "\nPresione Enter para continuar...";
+            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+        } else if (opcion == 4) {
+            // Verificar si hay productos y formas de pago cargadas
+            if (cantidadProductos == 0) {
+                cout << "\n===== CARGA DE LOTE DE VENTAS =====" << endl;
+                cout << "Error: No hay productos cargados. Debe cargar el lote de productos primero." << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                continue;
+            }
+            
+            if (cantidadFormasPago == 0) {
+                cout << "\n===== CARGA DE LOTE DE VENTAS =====" << endl;
+                cout << "Error: No hay formas de pago cargadas. Debe cargar el lote de formas de pago primero." << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+                continue;
+            }
+            
+            // Preparar los arrays para la función
+            float preciosVenta[20];
+            float preciosCompra[20];
+            int stockDisponible[20];
+            int codigosMarcaProductos[20];
+            
+            // Preparar los arrays para la función de ventas
+            // Usamos los arrays globales que ya contienen los nombres y códigos
+            // correctos desde la función cargarLoteProductos
+            for (int i = 0; i < cantidadProductos; i++) {
+                // No necesitamos copiar los códigos, ya están en codigosProductosGlobal
+                preciosVenta[i] = productos[i].precioVenta;
+                preciosCompra[i] = productos[i].precioCompra;
+                stockDisponible[i] = productos[i].stock;
+                codigosMarcaProductos[i] = productos[i].codigoMarca;
+            }
+            
+            // Preparar los códigos de formas de pago
+            string codigosFormasPago[5];
+            for (int i = 0; i < 5; i++) {
+                // Asignar los códigos estándar
+                if (i == 0) codigosFormasPago[i] = "EF";
+                else if (i == 1) codigosFormasPago[i] = "MP";
+                else if (i == 2) codigosFormasPago[i] = "TR";
+                else if (i == 3) codigosFormasPago[i] = "TC";
+                else if (i == 4) codigosFormasPago[i] = "CT";
+            }
+            
+            // Llamar a la función de carga de ventas con todos los datos de productos
+            cargarLoteVentas(codigosProductosGlobal, cantidadProductos, codigosFormasPago, cantidadFormasPago,
+                           nombresProductosGlobal, preciosVenta, preciosCompra, stockDisponible, codigosMarcaProductos,
+                           ventas, cantidadVentas);
+            
+            cout << "\nPresione Enter para continuar...";
+            cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+            cin.get();    // Esperar que el usuario presione Enter antes de continuar
+        } else if (opcion == 5) {
+            // Mostrar submenú de reportes
+            cout << "\n===== REPORTES =====" << endl;
+            
+            // Verificar si hay datos cargados
+            if (cantidadProductos == 0) {
+                cout << "Error: No hay productos cargados. Debe cargar el lote de productos primero." << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+            } else if (cantidadVentas == 0) {
+                cout << "Error: No hay ventas registradas. Debe cargar el lote de ventas primero." << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.ignore(); // Limpiar el buffer de entrada para evitar problemas con getline
+                cin.get();    // Esperar que el usuario presione Enter antes de continuar
+            } else {
+                // Preparar arrays de formas de pago para los reportes
+                FormaPago formasPagoArray[5];
+                int cantidadFormasPagoArray = 5;
+                
+                // Inicializar formas de pago estándar (solo porcentajes)
+                formasPagoArray[0].porcentaje = 0;   // EF
+                formasPagoArray[1].porcentaje = 5;   // MP  
+                formasPagoArray[2].porcentaje = -2;  // TR
+                formasPagoArray[3].porcentaje = 10;  // TC
+                formasPagoArray[4].porcentaje = -1;  // CT
+                
+                // Llamar al submenú de reportes
+                mostrarMenuReportes(productos, cantidadProductos, nombresProductosGlobal, 
+                                  ventas, cantidadVentas, marcas, cantidadMarcas, 
+                                  formasPagoArray, cantidadFormasPagoArray);
+            }
         } else if (opcion == 0) {
             cout << "Saliendo del programa..." << endl;
             programaActivo = false; // Cambiamos a false para salir del bucle.
@@ -46,262 +199,4 @@ void mostrarMenu() {
     }
 }
 
-void cargarLoteMarcas() {
-    cout << "\n===== CARGA DE LOTE DE MARCAS =====" << endl;
-    cout << "Se deben cargar 10 marcas en total." << endl;
-    
-    
-    cantidadMarcas = 0;
-    
-    
-    for (int i = 0; i < 10; i++) {
-        cout << "\nMarca #" << (i + 1) << ":" << endl;
-        
-        int codigo;
-        string nombreTemp; // Ahora usamos string en lugar de char[]
-        bool codigoValido = false;
-        
-        
-        while (!codigoValido) {
-            cout << "Ingrese codigo de marca (1-10): ";
-            cin >> codigo;
-            
-            if (codigo <= 0 || codigo > 10) {
-                cout << "Error: El codigo debe estar entre 1 y 10." << endl;
-            } else {
-                
-                bool codigoExiste = false;
-                for (int j = 0; j < cantidadMarcas; j++) {
-                    if (codigosMarcas[j] == codigo) {
-                        codigoExiste = true;
-                        break;
-                    }
-                }
-                
-                if (codigoExiste) {
-                    cout << "Error: Ya existe una marca con ese codigo." << endl;
-                } else {
-                    codigoValido = true;
-                }
-            }
-        }
-        
-        
-        bool nombreValido = false;
-        cin.ignore();
-        
-        while (!nombreValido) {
-            cout << "Ingrese nombre de la marca: ";
-            getline(cin, nombreTemp); // Usamos getline para string
-            
-            if (nombreTemp.empty()) { // Verificamos si está vacío
-                cout << "Error: El nombre no puede estar vacio." << endl;
-            } else {
-                nombreValido = true;
-            }
-        }
-        
-        
-        codigosMarcas[cantidadMarcas] = codigo;
-        nombresMarcas[cantidadMarcas] = nombreTemp; // Simplemente asignamos el string
-        
-        cantidadMarcas++;
-        
-        cout << "Marca registrada correctamente." << endl;
-    }
-    
-    cout << "\nLote de marcas cargado exitosamente!" << endl;
-    cout << "Total de marcas cargadas: " << cantidadMarcas << endl;
-    
-    
-    cout << "\nListado de marcas cargadas:" << endl;
-    cout << "-------------------------" << endl;
-    cout << "CODIGO | NOMBRE" << endl;
-    cout << "-------------------------" << endl;
-    
-    for (int i = 0; i < cantidadMarcas; i++) {
-        cout << "  " << codigosMarcas[i] << "    | " << nombresMarcas[i]; // Imprimimos directamente el string
-        
-        cout << endl;
-    }
-    cout << "-------------------------" << endl;
-}
-
-void cargarLoteProductos() {
-    cout << "\n===== CARGA DE LOTE DE PRODUCTOS =====" << endl;
-    cout << "Se deben cargar 20 productos en total." << endl;
-    
-    // Verificar si hay marcas cargadas
-    if (cantidadMarcas == 0) {
-        cout << "Error: No hay marcas cargadas. Debe cargar el lote de marcas primero." << endl;
-        return;
-    }
-    
-    // Resetear el contador de productos
-    cantidadProductos = 0;
-    
-    // Cargar los 20 productos
-    for (int i = 0; i < 20; i++) {
-        cout << "\nProducto #" << (i + 1) << ":" << endl;
-        
-        // Variables temporales
-        int codigo;
-        string nombreTemp; // Usamos string en lugar de char[]
-        float precioVenta;
-        float precioCompra;
-        int stock;
-        int codigoMarca;
-        bool datosValidos = false;
-        
-        // Validar código de producto (3 dígitos, no consecutivos)
-        while (!datosValidos) {
-            cout << "Ingrese código de producto (3 dígitos): ";
-            cin >> codigo;
-            
-            // Validar que sea un número de 3 dígitos
-            if (codigo < 100 || codigo > 999) {
-                cout << "Error: El código debe ser un número de 3 dígitos." << endl;
-                continue;
-            }
-            
-            // Validar que no exista ya
-            bool codigoExiste = false;
-            for (int j = 0; j < cantidadProductos; j++) {
-                if (codigosProductos[j] == codigo) {
-                    codigoExiste = true;
-                    break;
-                }
-            }
-            
-            if (codigoExiste) {
-                cout << "Error: Ya existe un producto con ese código." << endl;
-                continue;
-            }
-            
-            datosValidos = true;
-        }
-        
-        // Validar nombre
-        datosValidos = false;
-        cin.ignore();
-        
-        while (!datosValidos) {
-            cout << "Ingrese nombre del producto: ";
-            getline(cin, nombreTemp); // Usamos getline para string
-            
-            datosValidos = true;
-        }
-        
-        // Validar precio de venta
-        datosValidos = false;
-        
-        while (!datosValidos) {
-            cout << "Ingrese precio de venta: ";
-            cin >> precioVenta;
-            
-            // Validar que no sea cero o negativo
-            if (precioVenta <= 0) {
-                cout << "Error: El precio de venta debe ser mayor que cero." << endl;
-                continue;
-            }
-            
-            datosValidos = true;
-        }
-        
-        // Validar precio de compra
-        datosValidos = false;
-        
-        while (!datosValidos) {
-            cout << "Ingrese precio de compra: ";
-            cin >> precioCompra;
-            
-            // Validar que no sea cero o negativo
-            if (precioCompra <= 0) {
-                cout << "Error: El precio de compra debe ser mayor que cero." << endl;
-                continue;
-            }
-            
-            datosValidos = true;
-        }
-        
-        // Validar stock disponible
-        datosValidos = false;
-        
-        while (!datosValidos) {
-            cout << "Ingrese stock disponible: ";
-            cin >> stock;
-            
-            // Validar que no sea cero o negativo
-            if (stock <= 0) {
-                cout << "Error: El stock debe ser mayor que cero." << endl;
-                continue;
-            }
-            
-            datosValidos = true;
-        }
-        
-        // Validar código de marca
-        datosValidos = false;
-        
-        while (!datosValidos) {
-            cout << "Ingrese código de marca (1-10): ";
-            cin >> codigoMarca;
-            
-            // Validar que esté en el rango correcto
-            if (codigoMarca < 1 || codigoMarca > 10) {
-                cout << "Error: El código de marca debe estar entre 1 y 10." << endl;
-                continue;
-            }
-            
-            // Validar que exista en el lote de marcas
-            bool marcaExiste = false;
-            for (int j = 0; j < cantidadMarcas; j++) {
-                if (codigosMarcas[j] == codigoMarca) {
-                    marcaExiste = true;
-                    break;
-                }
-            }
-            
-            if (!marcaExiste) {
-                cout << "Error: Código de marca no encontrado en el lote de marcas." << endl;
-                return; // Interrumpir la carga y volver al menú principal
-            }
-            
-            datosValidos = true;
-        }
-        
-        // Guardar los datos del producto
-        codigosProductos[cantidadProductos] = codigo;
-        nombresProductos[cantidadProductos] = nombreTemp; // aca asignamos el string
-        
-        preciosVenta[cantidadProductos] = precioVenta;
-        preciosCompra[cantidadProductos] = precioCompra;
-        stockDisponible[cantidadProductos] = stock;
-        codigosMarcaProductos[cantidadProductos] = codigoMarca;
-        
-        cantidadProductos++;
-        
-        cout << "Producto registrado correctamente." << endl;
-    }
-    
-    cout << "\nLote de productos cargado exitosamente!" << endl;
-    cout << "Total de productos cargados: " << cantidadProductos << endl;
-    
-    // Mostrar listado de productos cargados
-    cout << "\nListado de productos cargados:" << endl;
-    cout << "----------------------------------------------------------------------" << endl;
-    cout << "CÓDIGO | NOMBRE                | P.VENTA | P.COMPRA | STOCK | COD.MARCA" << endl;
-    cout << "----------------------------------------------------------------------" << endl;
-    
-    for (int i = 0; i < cantidadProductos; i++) {
-        cout << "  " << codigosProductos[i] << "   | " << nombresProductos[i];
-        
-        // Rellenar con espacios para alinear la tabla
-        for (int k = nombresProductos[i].length(); k < 22; k++) {
-            cout << " ";
-        }
-        
-        cout << "| " << preciosVenta[i] << "   | " << preciosCompra[i] << "    | " << stockDisponible[i] << "    | " << codigosMarcaProductos[i] << endl;
-    }
-    cout << "----------------------------------------------------------------------" << endl;
-}
+// Las funciones de carga de lotes se han simplificado y se manejan directamente en mostrarMenu()
